@@ -2,6 +2,8 @@ import { Stack, StackProps } from "aws-cdk-lib";
 import { Repository } from "aws-cdk-lib/aws-codecommit";
 import { CodeBuildStep, CodePipeline, CodePipelineSource } from "aws-cdk-lib/pipelines";
 import { Construct } from "constructs";
+import { WorkshopPipelineStage } from "./pipeline-stage";
+import { pipeline } from "stream";
 
 export class WorkshopPipelineStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps){
@@ -13,7 +15,7 @@ export class WorkshopPipelineStack extends Stack {
         })
 
         // create pipeline
-        new CodePipeline(this, 'CdkWorkshopPipeline', {
+        const pipeline = new CodePipeline(this, 'CdkWorkshopPipeline', {
             pipelineName: 'CdkWorkshopPipeline',
             synth: new CodeBuildStep('Synthstep', {
                 input: CodePipelineSource.codeCommit(repository, 'master'),
@@ -27,5 +29,9 @@ export class WorkshopPipelineStack extends Stack {
                 ]
             })
         })
+
+        // add deploy step
+        const deploy = new WorkshopPipelineStage(this, 'Deploy')
+        const deployStage = pipeline.addStage(deploy);
     }
 }
