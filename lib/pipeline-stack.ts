@@ -24,6 +24,7 @@ export class WorkshopPipelineStack extends Stack {
         // use CodeCommit source
         // input: CodePipelineSource.codeCommit(repository, 'master'),
         // use github source
+        // test if change to Github will trigger pipeline
         input: CodePipelineSource.gitHub("andrewouko/cdk-workshop", "master", {
           authentication: SecretValue.secretsManager(
             "github-access-token-secret"
