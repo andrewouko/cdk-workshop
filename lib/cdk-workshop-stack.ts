@@ -6,7 +6,7 @@ import { TableViewer } from "cdk-dynamo-table-viewer";
 import { Construct } from "constructs";
 export class CdkWorkshopStack extends Stack {
   readonly hitCounterEndpoint: CfnOutput;
-  readonly hitCounterViewUrl: CfnOutput;
+  readonly tableViewerUrl: CfnOutput;
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
     // aws lambda resource
@@ -37,6 +37,13 @@ export class CdkWorkshopStack extends Stack {
       sortBy: '-hits'
     })
 
-    
+
+    this.hitCounterEndpoint = new CfnOutput(this, 'GatewayUrl', {
+      value: api_gateway.url
+    })
+
+    this.tableViewerUrl = new CfnOutput(this, 'TableViewerUrl', {
+      value: table_viewer.endpoint
+    })
   }
 }
